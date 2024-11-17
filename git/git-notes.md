@@ -14,3 +14,5 @@
 	- Tracking changes
 - Solving conflicts
 	- Git Merge vs Git rebase
+
+## Review with Guillaume
