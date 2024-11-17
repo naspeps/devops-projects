@@ -8,3 +8,9 @@
 - Create remote repo and clone to local
 - Create local repo then push to Github
 - Git Merge vs Git rebase
+- Collaboration
+	- Create feature branches, make modifications, merge with main
+	- Pull requests
+	- Tracking changes
+- Solving conflicts
+	- Git Merge vs Git rebase
