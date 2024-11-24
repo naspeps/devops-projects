@@ -13,7 +13,10 @@ choco install vagrant --version=2.3.7 -y
 
 ## Manual setup of VMs on VirtualBox
 **Troubleshooting network**
-When creating a CentOS VM, no IP address is assigned to the Bridged Device. The host device is the wifi adapter.
+When creating a CentOS/Ubuntu VM, no IP address is assigned to the Bridged Device. The host device is the wifi adapter.
+
+Error example during ubuntu installation
+![ubuntu error](/vagrant-and-vms/ubuntu_shared_adapter_fail.png "bridged adapter fail")
 
 Consequences:
 - ssh not working
@@ -25,7 +28,7 @@ Solutions attempted:
 ifup enp0s8
 ```
 
-![error](/vagrant-and-vms/ifup_error.png) "ifup fails")
+![error](/vagrant-and-vms/ifup_error.png "ifup fails")
 
 
 
@@ -48,3 +51,12 @@ More commands:
 #status of all vms
 vagrant global-status
 ```
+
+## Automatic deployment of a vm cluster
+Using vagrant, 3 vms are to be deployed and they should be able to communicate with each other (ping, ssh)
+
+- create a (private) network and assign ips to the vms
+
+Remarks:
+- Ping only works on the ip addresses and not hostname.
+    - The VirtualBox private network (or host-only network) doesn't include a DNS server to resolve hostnames.
