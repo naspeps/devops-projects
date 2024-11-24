@@ -38,5 +38,13 @@ vagrant init <boxname>
 vagrant up
 vagrant ssh
 vagrant halt
+vagrant status
 vagrant destroy
+vagrant box list
+```
+
+More commands:
+```
+#status of all vms
+vagrant global-status
 ```
