@@ -60,3 +60,49 @@ Using vagrant, 3 vms are to be deployed and they should be able to communicate w
 Remarks:
 - Ping only works on the ip addresses and not hostname.
     - The VirtualBox private network (or host-only network) doesn't include a DNS server to resolve hostnames.
+
+
+## Connnectivity between VMs in a cluster or network
+**Troubleshooting ssh**
+
+While trying to establish ssh from one VM to another VM, a possible error is the below:
+```
+vagrant@ansiblevm:~$ ssh vagrant@192.168.10.4
+vagrant@192.168.10.4: Permission denied (publickey)
+```
+
+A solution: 
+
+- Copy the public key to the other VM
+    - ssh into VM1
+    - copy the keys
+    ```
+    ssh-copy-id -i ~/.ssh/id_rsa.pub user@VM2
+    ```
+
+- Manually copy the key (if ssh_copy-id isn't available)
+    - Get VM1's public key
+    ```
+    cat ~/.ssh/id_rsa.pub
+    ```
+
+    - On VM2
+    ```
+    echo "PASTE_PUBLIC_KEY_HERE" >> ~/.ssh/authorized_keys
+    chmod 600 ~/.ssh/authorized_keys
+    ```
+
+    - Ensure SSH on VM2 accepts keys
+    edit /etc/ssh/sshd_config
+    ```
+    PubkeyAuthentication yes
+    AuthorizedKeysFile .ssh/authorized_keys
+    ```
+
+    - Restart ssh service
+    ```
+    sudo systemctl restart sshd
+    ```
+Now test ssh from VM1 to VM2
+
+
