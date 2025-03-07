@@ -1,3 +1,6 @@
 terraform/EC2WebServer/testkey
 terraform/EC2WebServer/testkey.pub
 terraform/EC2WebServer/.terraform/
+terraform/EC2Cluster/testkey
+terraform/EC2Cluster/testkey.pub
+terraform/EC2Cluster/.terraform/
