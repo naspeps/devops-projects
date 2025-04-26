@@ -1,0 +1,95 @@
+
+# 1- Create docker volume for persistence
+
+$ docker volume create postgres_data
+
+## see where data is being persisted
+$docker volume inspect <project_directory>_<volume_name>
+
+$docker volume inspect compose_postgres_data
+
+
+# 2- Create docker network for communication between containers (or name resolution of containers). Or modify AWS SG to allow comm between containers
+
+$docker network create pgnetwork
+
+
+# 3- 
+# Run PostgreSQL container
+
+docker run -d \
+  --name postgres_db \
+  --network pgnetwork \
+  -e POSTGRES_USER=admin \
+  -e POSTGRES_PASSWORD=admin123 \
+  -e POSTGRES_DB=mydb \
+  -p 5432:5432 \
+  -v postgres_data:/var/lib/postgresql/data \
+  postgres:15
+
+docker run -d \
+  --name postgres_db \
+  -e POSTGRES_USER=admin \
+  -e POSTGRES_PASSWORD=admin123 \
+  -e POSTGRES_DB=mydb \
+  -p 5432:5432 \
+  postgres:15
+
+
+# Run pgAdmin container on same network as postgres container
+docker run -d \
+  --name pgadmin_ui \
+  --network pgnetwork \
+  -e PGADMIN_DEFAULT_EMAIL=admin@admin.com \
+  -e PGADMIN_DEFAULT_PASSWORD=admin123 \
+  -p 5050:80 \
+  dpage/pgadmin4
+
+
+# Run pgAdmin container on standalone network
+docker run -d \
+  --name pgadmin_ui \
+  -e PGADMIN_DEFAULT_EMAIL=admin@admin.com \
+  -e PGADMIN_DEFAULT_PASSWORD=admin123 \
+  -p 5050:80 \
+  dpage/pgadmin4
+
+
+# Write Dockerfiles for PostgreSQL and pgAdmin which packages the arguments
+
+## Dockerfile for PostgreSQL
+
+FROM postgres:15
+ENV POSTGRES_USER=admin
+ENV POSTGRES_PASSWORD=admin123
+ENV POSTGRES_DB=mydb
+EXPOSE 5432
+
+## Dockerfile for pgAdmin
+
+FROM dpage/pgadmin4
+ENV PGADMIN_DEFAULT_EMAIL=admin@sendkolo.com
+ENV PGADMIN_DEFAULT_PASSWORD=admin123
+EXPOSE 80
+
+# Build the docker images
+
+$ docker build -t <image-name> .
+
+
+# Use Docker Compose to deploy the two containers
+# check docker-compose.yml
+$ docker compose up -d
+
+
+# Cleanup
+docker stop postgres_db pgadmin_ui
+docker rm postgres_db pgadmin_ui
+docker network rm pgnetwork
+docker volume rm postgres_data
+
+
+# Remarks
+1- During docker build:
+1 warning found (use docker --debug to expand):
+ - SecretsUsedInArgOrEnv: Do not use ARG or ENV instructions for sensitive data (ENV "PGADMIN_DEFAULT_PASSWORD") (line 4)

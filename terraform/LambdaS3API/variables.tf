@@ -11,7 +11,7 @@ variable "lambda_name" {
 
 variable "bucket_name" {
   description = "Name of the S3 bucket"
-  default     = "test-data-bucket-971422682604-1"
+  default     = "test-data-bucket-971422682604-2"
 }
 
 
