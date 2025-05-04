@@ -1,4 +1,5 @@
-# Save as Jenkinfile
+# Save as Jenkinfile. Remove this comment before executing code.
+
 
 pipeline {
     agent any
